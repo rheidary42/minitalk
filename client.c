@@ -6,7 +6,7 @@
 /*   By: rheidary <rheidary@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 06:37:01 by rheidary          #+#    #+#             */
-/*   Updated: 2025/10/21 21:06:21 by rheidary         ###   ########.fr       */
+/*   Updated: 2025/10/23 19:40:51 by rheidary         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ int	main(int argc, char **argv)
 		while (++j < 8)
 			send_signal(c, j, argv[1]);
 		if (c == '\0')
-			break;
+			break ;
 		i++;
 	}
 	return (0);

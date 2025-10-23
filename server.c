@@ -6,7 +6,7 @@
 /*   By: rheidary <rheidary@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 06:37:05 by rheidary          #+#    #+#             */
-/*   Updated: 2025/10/23 19:19:38 by rheidary         ###   ########.fr       */
+/*   Updated: 2025/10/23 19:41:06 by rheidary         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ char	*ft_strjoin_char(char *s, char c)
 {
 	int		i;
 	char	*new;
+
 	if (!s)
 	{
 		new = malloc(2);

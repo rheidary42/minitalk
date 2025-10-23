@@ -51,16 +51,18 @@ c:
 	@echo ""
 
 f:
+	@make fclean -sC ft_printf
 	@rm -f $(SERVER)
 	@rm -f $(CLIENT)
 	@echo "$(RED)╔═══════════════════════════════╗$(RESET)"
+	@echo "$(RED)║$(RED)💀 ft_printf objects removed 💀$(RED)║$(RESET)"
 	@echo "$(RED)║   $(RED)💀 server      removed 💀$(RED)   ║$(RESET)"
 	@echo "$(RED)║   $(RED)💀 client      removed 💀$(RED)   ║$(RESET)"
 	@echo "$(RED)╚═══════════════════════════════╝$(RESET)"
 	@echo ""
 	@make fclean -sC ft_printf
 	@echo "$(RED)╔═══════════════════════════════╗$(RESET)"
-	@echo "$(RED)║$(RED)💀 ft_printf objects removed 💀$(RED)║$(RESET)"
+	@echo "$(RED)║  $(RED) 💀 ft_printf.a removed 💀$(RED)   ║$(RESET)"
 	@echo "$(RED)╚═══════════════════════════════╝$(RESET)"
 	@echo ""
 
