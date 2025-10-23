@@ -10,30 +10,47 @@ BOLD    := \033[1m
 
 # --- config ---
 
-CC      := cc
-CFLAGS  := -g -I.
-# -Wall -Wextra -Werror 
+CC      := gcc
+CFLAGS  := -g -I./ft_printf -Wall -Wextra -Werror
 
 SERVER  := server
 CLIENT  := client
 
-all: $(SERVER) $(CLIENT)
+FT_PRINTF := ft_printf/libftprintf.a
 
-$(SERVER): $(SERVER).c
-	@$(CC) $(CFLAGS) $(SERVER).c -o $(SERVER)
+all: $(SERVER) $(CLIENT) $(LIBFT) $(FT_PRINTF)
+
+$(SERVER): $(SERVER).c $(FT_PRINTF)
+	@$(CC) $(CFLAGS) $(SERVER).c $(FT_PRINTF) -o $(SERVER)
 	@echo "$(GREEN)╔═══════════════════════════════╗$(RESET)"
 	@echo "$(GREEN)║   $(ORANGE)🎉 server      $(YELLOW)created 🎉$(GREEN)   ║$(RESET)"
 	@echo "$(GREEN)╚═══════════════════════════════╝$(RESET)"
 
-$(CLIENT): $(CLIENT).c
-	@$(CC) $(CFLAGS) $(CLIENT).c -o $(CLIENT)
+$(CLIENT): $(CLIENT).c $(LIBFT) $(FT_PRINTF)
+	@$(CC) $(CFLAGS) $(CLIENT).c $(LIBFT) $(FT_PRINTF) -o $(CLIENT)
 	@echo "$(GREEN)╔═══════════════════════════════╗$(RESET)"
 	@echo "$(GREEN)║   $(ORANGE)🎉 client      $(YELLOW)created 🎉$(GREEN)   ║$(RESET)"
+	@echo "$(GREEN)╚═══════════════════════════════╝$(RESET)"
+	@echo ""
+
+# --- libraries ---
+
+$(FT_PRINTF):
+	@make -sC ft_printf
+	@echo "$(GREEN)╔═══════════════════════════════╗$(RESET)"
+	@echo "$(GREEN)║   $(ORANGE)✅  printf.a $(YELLOW)  created ✅$(GREEN)   ║$(RESET)"
 	@echo "$(GREEN)╚═══════════════════════════════╝$(RESET)"
 
 # --- cleaning ---
 
 c:
+	@make clean -sC ft_printf
+	@echo "$(RED)╔═══════════════════════════════╗$(RESET)"
+	@echo "$(RED)║$(RED)💀 ft_printf objects removed 💀$(RED)║$(RESET)"
+	@echo "$(RED)╚═══════════════════════════════╝$(RESET)"
+	@echo ""
+
+f:
 	@rm -f $(SERVER)
 	@rm -f $(CLIENT)
 	@echo "$(RED)╔═══════════════════════════════╗$(RESET)"
@@ -41,11 +58,17 @@ c:
 	@echo "$(RED)║   $(RED)💀 client      removed 💀$(RED)   ║$(RESET)"
 	@echo "$(RED)╚═══════════════════════════════╝$(RESET)"
 	@echo ""
+	@make fclean -sC ft_printf
+	@echo "$(RED)╔═══════════════════════════════╗$(RESET)"
+	@echo "$(RED)║$(RED)💀 ft_printf objects removed 💀$(RED)║$(RESET)"
+	@echo "$(RED)╚═══════════════════════════════╝$(RESET)"
+	@echo ""
 
-re: c all
+
+re: f all
 	@echo "$(CYAN)╔═══════════════════════════════╗$(RESET)"
 	@echo "$(CYAN)║   $(YELLOW)🔄   project rebuilt   🔄$(CYAN)   ║$(RESET)"
 	@echo "$(CYAN)╚═══════════════════════════════╝$(RESET)"
 	@echo ""
 
-.PHONY: all c re
+.PHONY: all c f re
