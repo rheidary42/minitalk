@@ -10,7 +10,7 @@ BOLD    := \033[1m
 
 # --- config ---
 
-CC      := gcc
+CC      := cc
 CFLAGS  := -g -I./ft_printf -Wall -Wextra -Werror
 
 SERVER  := server
