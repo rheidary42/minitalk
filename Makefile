@@ -18,7 +18,7 @@ CLIENT  := client
 
 FT_PRINTF := ft_printf/libftprintf.a
 
-all: $(SERVER) $(CLIENT) $(LIBFT) $(FT_PRINTF)
+all: $(SERVER) $(CLIENT) $(FT_PRINTF)
 
 $(SERVER): $(SERVER).c $(FT_PRINTF)
 	@$(CC) $(CFLAGS) $(SERVER).c $(FT_PRINTF) -o $(SERVER)
@@ -26,8 +26,8 @@ $(SERVER): $(SERVER).c $(FT_PRINTF)
 	@echo "$(GREEN)║   $(ORANGE)🎉 server      $(YELLOW)created 🎉$(GREEN)   ║$(RESET)"
 	@echo "$(GREEN)╚═══════════════════════════════╝$(RESET)"
 
-$(CLIENT): $(CLIENT).c $(LIBFT) $(FT_PRINTF)
-	@$(CC) $(CFLAGS) $(CLIENT).c $(LIBFT) $(FT_PRINTF) -o $(CLIENT)
+$(CLIENT): $(CLIENT).c $(FT_PRINTF)
+	@$(CC) $(CFLAGS) $(CLIENT).c $(FT_PRINTF) -o $(CLIENT)
 	@echo "$(GREEN)╔═══════════════════════════════╗$(RESET)"
 	@echo "$(GREEN)║   $(ORANGE)🎉 client      $(YELLOW)created 🎉$(GREEN)   ║$(RESET)"
 	@echo "$(GREEN)╚═══════════════════════════════╝$(RESET)"
