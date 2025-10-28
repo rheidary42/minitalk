@@ -1,0 +1,22 @@
+{
+  "name": "Minishell Dev Container",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".."
+  },
+  "workspaceFolder": "/home/dev/workspace",
+  "runArgs": [
+    "--user", "dev",
+    "-v", "${localWorkspaceFolder}:/home/dev/workspace:cached",
+    "-v", "${env:HOME}/.ssh:/home/dev/.ssh:ro"
+  ],
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.shell.linux": "/bin/bash"
+      },
+      "extensions": []
+    }
+  },
+  "remoteUser": "dev"
+}
