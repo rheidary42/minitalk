@@ -12,10 +12,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	libncurses-dev \
 	&& rm -rf /var/lib/apt/lists/*
 
-# Create non-root user
-RUN useradd -m -s /bin/bash dev
-
-USER dev
 WORKDIR /home/dev/workspace
 
 # Customize shell prompt
