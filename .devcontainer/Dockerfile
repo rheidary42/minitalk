@@ -12,9 +12,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	libncurses-dev \
 	&& rm -rf /var/lib/apt/lists/*
 
-WORKDIR /home/dev/workspace
+# Use root's home as workspace
+WORKDIR /root/workspace
 
 # Customize shell prompt
-RUN echo 'export PS1="\W> "' >> /home/dev/.bashrc
+RUN echo 'export PS1="\W> "' >> /root/.bashrc
 
 ENTRYPOINT ["/bin/bash", "-lc"]
