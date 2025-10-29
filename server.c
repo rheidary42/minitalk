@@ -6,98 +6,75 @@
 /*   By: rheidary <rheidary@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 06:37:05 by rheidary          #+#    #+#             */
-/*   Updated: 2025/10/23 19:41:06 by rheidary         ###   ########.fr       */
+/*   Updated: 2025/10/29 17:45:14 by rheidary         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#define _POSIX_C_SOURCE 200809L
+#define _DEFAULT_SOURCE
 #include <signal.h>
 #include <unistd.h>
-#include <stdlib.h>
 #include "ft_printf/libftprintf.h"
+#include <stdio.h>
 
-size_t	ft_strlen(const char *s)
+#define MAX_MSG 131072
+
+static volatile sig_atomic_t g_current_client = 0;
+
+void	send_char(char c, char *s, int *index, siginfo_t *info)
 {
-	int	i;
-
-	i = 0;
-	if (!s)
-		return (0);
-	while (s[i] != '\0')
-		i++;
-	return (i);
-}
-
-char	*ft_strjoin_char(char *s, char c)
-{
-	int		i;
-	char	*new;
-
-	if (!s)
+	if (*index < MAX_MSG - 1)
 	{
-		new = malloc(2);
-		if (!new)
-			return (NULL);
-		new[0] = c;
-		new[1] = '\0';
-		return (new);
+		s[*index] = c;
+		(*index)++;
 	}
-	new = malloc(ft_strlen(s) + 2);
-	if (!new)
-		return (NULL);
-	i = 0;
-	while (s[i])
+	if (c == '\0' || *index >= MAX_MSG - 1)
 	{
-		new[i] = s[i];
-		i++;
-	}
-	new[i] = c;
-	new[i + 1] = '\0';
-	free(s);
-	return (new);
-}
-
-void	send_char(char c, char **s, siginfo_t *info)
-{
-	char	*temp;
-
-	temp = ft_strjoin_char(*s, c);
-	if (!temp)
-	{
-		free(*s);
-		exit(EXIT_FAILURE);
-	}
-	*s = temp;
-	if (c == '\0')
-	{
-		write(1, *s, ft_strlen(*s));
-		free(*s);
-		*s = NULL;
-		kill(info->si_pid, SIGUSR2);
+		write(2, s, *index);
+		*index = 0;
+		g_current_client = 0;
+		kill(info->si_pid, SIGUSR1);
 	}
 	else
+	{
+		// printf("sending SIGUSR1 (bit): %d\n", info->si_pid);
 		kill(info->si_pid, SIGUSR1);
+		// printf("sent SIGUSR1 (bit): %d\n", info->si_pid);
+	}
 }
 
 void	sig_handler(int sig, siginfo_t *info, void *ucontext)
 {
 	static int		count = 0;
 	static char		c = 0;
-	static char		*s = NULL;
+	static char		s[MAX_MSG];
+	static int		index = 0;
 
 	(void)ucontext;
+	// printf("pid: %d\n", info->si_pid);
+	if (g_current_client && info->si_pid != g_current_client)
+	{
+		// printf("sending SIGUSR2: %d\n", info->si_pid);
+		kill(info->si_pid, SIGUSR2);
+		// printf("sent SIGUSR2: %d\n", info->si_pid);
+		return ;
+	}
+	g_current_client = info->si_pid;
 	c <<= 1;
 	if (sig == SIGUSR2)
 		c |= 1;
 	count++;
 	if (count == 8)
 	{
-		send_char(c, &s, info);
+		send_char(c, s, &index, info);
 		count = 0;
 		c = 0;
 	}
 	else
+	{
+		// printf("sending SIGUSR1 (received full byte): %d\n", info->si_pid);
 		kill(info->si_pid, SIGUSR1);
+		// printf("sent SIGUSR1 (received full byte): %d\n", info->si_pid);
+	}
 }
 
 int	main(void)
@@ -113,6 +90,10 @@ int	main(void)
 	sigaction(SIGUSR2, &sa, NULL);
 	ft_printf("Server PID: %d\n", getpid());
 	while (1)
+	{
+		// printf("pausing\n");
 		pause();
+		// printf("ending pause\n");
+	}
 	return (0);
 }

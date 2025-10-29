@@ -6,11 +6,11 @@
 /*   By: rheidary <rheidary@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 06:37:01 by rheidary          #+#    #+#             */
-/*   Updated: 2025/10/23 19:40:51 by rheidary         ###   ########.fr       */
+/*   Updated: 2025/10/29 17:53:50 by rheidary         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#define _POSIX_C_SOURCE 200809L
+#define _DEFAULT_SOURCE
 #include <signal.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -24,9 +24,10 @@ void	ack_handler(int sig)
 		g_ack = 1;
 	if (sig == SIGUSR2)
 	{
-		write(1, "Hand has been shook\n", 21);
+		write(1, "Server busy\n", 12);
 		exit(EXIT_SUCCESS);
 	}
+	// ft_printf("set g_ack to 1\n");
 }
 
 int	ft_atoi(const char *str)
@@ -57,6 +58,7 @@ int	ft_atoi(const char *str)
 void	send_signal(char c, int j, char *server)
 {
 	g_ack = 0;
+	// ft_printf("set g_ack to 0\n");
 	if ((c & (1 << (7 - j))) != 0)
 	{
 		if (kill((pid_t)ft_atoi(server), SIGUSR2) == -1)
@@ -73,8 +75,10 @@ void	send_signal(char c, int j, char *server)
 			exit (EXIT_FAILURE);
 		}
 	}
+	// ft_printf("sent bit, pausing\n");
 	while (!g_ack)
-		pause();
+		usleep(10);
+	// ft_printf("ending pause\n");
 }
 
 int	main(int argc, char **argv)
@@ -102,5 +106,6 @@ int	main(int argc, char **argv)
 			break ;
 		i++;
 	}
+	write(1, "Server finished\n", 16);
 	return (0);
 }
